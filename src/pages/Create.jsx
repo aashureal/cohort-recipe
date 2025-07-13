@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { recipectx } from "../context/RecipeContext";
+import { toast } from "react-toastify";
 
 const Create = () => {
   const { data, setData } = useContext(recipectx);
@@ -14,21 +15,22 @@ const Create = () => {
   } = useForm();
 
   //   Form Submit Handler
-  const SubmitHandler = (formData) => {
-    formData.id = nanoid();
-    console.log(formData);
+  const SubmitHandler = (data) => {
+    try {
+      data.id = nanoid();
+      setData((prev) => [...prev, data]);
+      reset({
+        title: "",
+        description: "",
+        ingredients: "",
+        url: "",
+        category: "",
+      });
 
-    setData((prev) => [...prev, formData]);
-
-    console.log(data);
-
-    reset({
-      title: "",
-      description: "",
-      ingredients: "",
-      url: "",
-      category: "",
-    });
+      toast.success("Recipe created successfully!");
+    } catch (err) {
+      toast.error("Failed to create recipe.");
+    }
   };
 
   return (
